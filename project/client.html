@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <script src="client.js"></script>
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discount Code</title>
+  </head>
+  <body>
+    <h2>Enter your details to get a discount</h2>
+
+    <form id="discount-form">
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName" required /><br /><br />
+
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" required /><br /><br />
+
+      <label for="phone">Phone Number (with indicative):</label>
+      <input type="tel" id="phone" name="phone" required /><br /><br />
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      document
+        .getElementById("discount-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const firstName = document.getElementById("firstName").value;
+          const lastName = document.getElementById("lastName").value;
+          const phone = document.getElementById("phone").value;
+
+          // Generate a random 6-digit code
+          const discountCode =
+            "DC" + Math.floor(100000 + Math.random() * 900000);
+
+          // Post data to server
+          const response = await fetch("/api/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ firstName, lastName, phone, discountCode }),
+          });
+
+          if (response.ok) {
+            // Show success message
+            document.getElementById("result").innerHTML = `
+                    <h3>Thanks for submitting, ${firstName} ${lastName}!</h3>
+                    <p>Enjoy your 10% discount on our services.</p>
+                    <p>Your personal code is: <strong>${discountCode}</strong></p>
+                `;
+          } else {
+            document.getElementById("result").textContent =
+              "Failed to submit data.";
+          }
+        });
+    </script>
+  </body>
+</html>
