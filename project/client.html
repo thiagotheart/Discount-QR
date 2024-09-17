@@ -1,63 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-  <script src="client.js"></script>
-
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Discount Code</title>
+    <title>Client Form</title>
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h2>Enter your details to get a discount</h2>
+    <!-- Logo at the top-center -->
+    <div class="logo-container">
+      <img src="/path/to/logo.png" alt="Logo" class="logo" />
+    </div>
 
-    <form id="discount-form">
-      <label for="firstName">First Name:</label>
-      <input type="text" id="firstName" name="firstName" required /><br /><br />
+    <div class="container">
+      <h1>Get Your 10% Discount</h1>
 
-      <label for="lastName">Last Name:</label>
-      <input type="text" id="lastName" name="lastName" required /><br /><br />
+      <form id="client-form">
+        <label for="firstName">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          placeholder="Enter your first name"
+          required
+        />
 
-      <label for="phone">Phone Number (with indicative):</label>
-      <input type="tel" id="phone" name="phone" required /><br /><br />
+        <label for="lastName">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          placeholder="Enter your last name"
+          required
+        />
 
-      <button type="submit">Submit</button>
-    </form>
+        <label for="phone">Phone Number</label>
+        <input
+          type="tel"
+          id="phone"
+          placeholder="Enter your phone number with country code"
+          required
+        />
 
-    <div id="result"></div>
+        <button type="submit">Submit</button>
+      </form>
 
-    <script>
-      document
-        .getElementById("discount-form")
-        .addEventListener("submit", async function (event) {
-          event.preventDefault();
+      <div class="message" id="message">
+        <!-- Success message will appear here -->
+      </div>
 
-          const firstName = document.getElementById("firstName").value;
-          const lastName = document.getElementById("lastName").value;
-          const phone = document.getElementById("phone").value;
+      <!-- Button to see pricing will be added here after form submission -->
+      <div id="pricing-button-container"></div>
+    </div>
 
-          // Generate a random 6-digit code
-          const discountCode =
-            "DC" + Math.floor(100000 + Math.random() * 900000);
-
-          // Post data to server
-          const response = await fetch("/api/submit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ firstName, lastName, phone, discountCode }),
-          });
-
-          if (response.ok) {
-            // Show success message
-            document.getElementById("result").innerHTML = `
-                    <h3>Thanks for submitting, ${firstName} ${lastName}!</h3>
-                    <p>Enjoy your 10% discount on our services.</p>
-                    <p>Your personal code is: <strong>${discountCode}</strong></p>
-                `;
-          } else {
-            document.getElementById("result").textContent =
-              "Failed to submit data.";
-          }
-        });
-    </script>
+    <!-- Link to JavaScript -->
+    <script src="client.js"></script>
   </body>
 </html>

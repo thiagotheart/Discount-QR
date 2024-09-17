@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     // Display the success message and the discount code
                     showMessage(`${data.message} Your code: ${data.code}`);
+                    // Show the "See Pricing" button that leads to an image
+                    showPricingButton();
                 }
             })
             .catch(error => {
@@ -61,5 +63,21 @@ document.addEventListener('DOMContentLoaded', function () {
         const messageBox = document.querySelector('#messageBox');
         messageBox.textContent = message;
         messageBox.style.display = 'block';
+    }
+
+    // Function to show the "See Pricing" button
+    function showPricingButton() {
+        const pricingButton = document.createElement('button');
+        pricingButton.textContent = 'See Pricing';
+        pricingButton.style.marginTop = '10px';
+
+        // Add an event listener to redirect to the pricing image
+        pricingButton.addEventListener('click', function () {
+            window.location.href = '/image/pricing-image.jpg'; // Replace with your image path
+        });
+
+        // Append the button below the message box
+        const messageBox = document.querySelector('#messageBox');
+        messageBox.appendChild(pricingButton);
     }
 });

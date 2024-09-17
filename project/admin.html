@@ -1,47 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
-</head>
-<body>
-    <h2>Client Information</h2>
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="admin-style.css" />
+  </head>
+  <body>
+    <h1>Client Management</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Phone</th>
-                <th>Discount Code</th>
-            </tr>
-        </thead>
-        <tbody id="client-data"></tbody>
+    <table id="clientTable">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Phone</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Client rows will be inserted here by JavaScript -->
+      </tbody>
     </table>
 
-    <script>
-        async function fetchClientData() {
-            const response = await fetch('/api/clients');
-            const clients = await response.json();
-
-            const tbody = document.getElementById('client-data');
-            tbody.innerHTML = '';
-
-            clients.forEach(client => {
-                const row = `
-                    <tr>
-                        <td>${client.firstName}</td>
-                        <td>${client.lastName}</td>
-                        <td>${client.phone}</td>
-                        <td>${client.discountCode}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        fetchClientData();
-    </script>
-</body>
+    <!-- Link to JavaScript -->
+    <script src="admin.js"></script>
+  </body>
 </html>
