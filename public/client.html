@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client Form</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="logo-container">
+      <img src="logo.png" alt="Logo" class="logo" />
+    </div>
+
+    <div class="container" id="form-container">
+      <h1>Get Your 10% Discount</h1>
+      <form id="client-form">
+        <label for="firstName">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          placeholder="Enter your first name"
+          required
+        />
+        <label for="lastName">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          placeholder="Enter your last name"
+          required
+        />
+        <label for="phone">Phone Number</label>
+        <input
+          type="tel"
+          id="phone"
+          placeholder="Enter your phone number with country code"
+          required
+        />
+        <button type="submit">Submit</button>
+      </form>
+      <div class="message" id="message" style="display: none">
+        <p id="thank-you-message"></p>
+        <p id="code-display" class="code-display"></p>
+        <button
+          id="pricing-button"
+          class="pricing-button"
+          style="display: none"
+          onclick="location.href='/path/to/pricing/image.jpg';"
+        >
+          See Pricing
+        </button>
+      </div>
+    </div>
+    <script src="client.js"></script>
+  </body>
+</html>

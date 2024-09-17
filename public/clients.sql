@@ -1,0 +1,7 @@
+CREATE TABLE clients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    phone TEXT NOT NULL UNIQUE,
+    discountCode TEXT NOT NULL
+);

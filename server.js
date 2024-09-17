@@ -1,119 +1,126 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
 const bodyParser = require('body-parser');
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path'); // Import path module
 const app = express();
+const PORT = 3000;
 
-// Set up the port
-const PORT = process.env.PORT || 3000;
+// Middleware
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from 'public' folder
 
-// Initialize SQLite database
-const db = new sqlite3.Database('./clients.db', (err) => {
+// Database setup
+const db = new sqlite3.Database('clients.db', (err) => {
     if (err) {
-        console.error('Error opening the database', err);
-    } else {
-        console.log('Connected to the database');
-        db.run(`CREATE TABLE IF NOT EXISTS clients (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            firstName TEXT,
-            lastName TEXT,
-            phone TEXT,
-            discountCode TEXT
-        )`);
+        console.error(err.message);
     }
 });
 
-// Middleware to parse JSON and form data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Create clients table if it doesn't exist, including a timestamp column
+db.run(`CREATE TABLE IF NOT EXISTS clients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    phone TEXT UNIQUE NOT NULL,
+    discountCode TEXT UNIQUE NOT NULL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+)`);
 
-// Serve static files (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, 'project')));
-
-// Route to serve the client.html on root
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'project', 'client.html'));
-});
-
-// Route to serve the admin dashboard
-app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'project', 'admin.html'));
-});
-
-// API route to handle client form submissions
-app.post('/api/submit', (req, res) => {
+// POST endpoint for client data
+app.post('/api/clients', (req, res) => {
     const { firstName, lastName, phone, discountCode } = req.body;
 
-    // Check if the client already exists (by phone number)
+    // Validate input
+    if (!firstName || !lastName || !phone || !discountCode) {
+        return res.status(400).send('All fields are required.');
+    }
+
+    // Check if the client already exists
     db.get(`SELECT * FROM clients WHERE phone = ?`, [phone], (err, row) => {
         if (err) {
-            return res.status(500).json({ error: 'Database error' });
+            console.error(err);
+            return res.status(500).send('Server error');
         }
         if (row) {
-            // Client already exists
-            res.status(200).json({ message: 'You have already received a discount code.', code: row.discountCode });
-        } else {
-            // Insert new client into the database
-            db.run(`INSERT INTO clients (firstName, lastName, phone, discountCode) VALUES (?, ?, ?, ?)`,
-                [firstName, lastName, phone, discountCode],
-                function (err) {
-                    if (err) {
-                        return res.status(500).json({ error: 'Database error' });
-                    }
-                    res.status(200).json({ message: 'Thanks for submitting, enjoy your 10% discount on our services.', code: discountCode });
+            return res.status(400).send('Client already exists with this phone number.');
+        }
+
+        // Insert new client into the database
+        db.run(`INSERT INTO clients (firstName, lastName, phone, discountCode) VALUES (?, ?, ?, ?)`,
+            [firstName, lastName, phone, discountCode],
+            function (err) {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send('Server error');
                 }
-            );
-        }
+                res.status(201).send({ message: 'Client added', discountCode });
+            }
+        );
     });
 });
 
-// Route to get all clients (for admin dashboard)
+// Get all clients for admin dashboard
 app.get('/api/clients', (req, res) => {
-    db.all(`SELECT * FROM clients`, (err, rows) => {
+    db.all(`SELECT * FROM clients`, [], (err, rows) => {
         if (err) {
-            return res.status(500).json({ error: 'Database error' });
+            console.error(err);
+            return res.status(500).send('Server error');
         }
-        res.status(200).json(rows);
+        res.json(rows);
     });
 });
 
-
-// API route to edit a client
+// Endpoint to edit a client
 app.post('/api/edit', (req, res) => {
     const { id, firstName, lastName, phone } = req.body;
-
-    // Update the client information in the database
-    db.run(
-        `UPDATE clients SET firstName = ?, lastName = ?, phone = ? WHERE id = ?`,
-        [firstName, lastName, phone, id],
-        function (err) {
-            if (err) {
-                return res.status(500).json({ error: 'Database error' });
-            }
-            res.status(200).json({ message: 'Client information updated successfully.' });
-        }
-    );
-});
-
-// API route to delete a client
-app.post('/api/delete', (req, res) => {
-    const { id } = req.body;
-
-    // Delete the client from the database
-    db.run(`DELETE FROM clients WHERE id = ?`, [id], function (err) {
+    db.run('UPDATE clients SET firstName = ?, lastName = ?, phone = ? WHERE id = ?', [firstName, lastName, phone, id], function (err) {
         if (err) {
-            return res.status(500).json({ error: 'Database error' });
+            console.error(err);
+            return res.status(500).json({ error: err.message });
         }
-        res.status(200).json({ message: 'Client deleted successfully.' });
+        res.json({ message: 'Client updated successfully!' });
     });
 });
 
-// Serve images (e.g., pricing image)
-app.get('/path-to-your-image/pricing-image.jpg', (req, res) => {
-    res.sendFile(path.join(__dirname, 'project', 'images', 'pricing-image.jpg'));
+// Endpoint to delete a client
+app.post('/api/delete', (req, res) => {
+    const { id } = req.body;
+    db.run('DELETE FROM clients WHERE id = ?', id, function (err) {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ message: 'Client deleted successfully!' });
+    });
 });
 
-// Start the server
+// Scheduled job to delete clients older than 30 days
+setInterval(() => {
+    db.run(`DELETE FROM clients WHERE createdAt < DATETIME('now', '-30 days')`, function (err) {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log('Deleted clients older than 30 days');
+        }
+    });
+}, 24 * 60 * 60 * 1000); // Runs every 24 hours
+
+// Serve client HTML file
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'client.html')); // Serve the client HTML
+});
+
+// Serve admin HTML file
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin.html')); // Serve the admin HTML
+});
+
+// Serve thank you HTML file
+app.get('/thank-you.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'thank-you.html')); // Serve the thank you HTML
+});
+
+// Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });
