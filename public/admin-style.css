@@ -1,22 +1,26 @@
 /* General Styling */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f7f6;
+    background-color: #eef2f3;
     color: #333;
     margin: 0;
     padding: 20px;
 }
 
 h1 {
-    color: #2a9d8f;
+    color: #0679bf;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    font-size: 2.2em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 th,
@@ -24,19 +28,34 @@ td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+    font-size: 1em;
 }
 
 th {
-    background-color: #2a9d8f;
+    background-color: #0679bf;
     color: white;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 td {
     background-color: #fff;
+    transition: background-color 0.3s ease;
 }
 
-tr:hover {
-    background-color: #f1f1f1;
+tr:hover td {
+    background-color: #f0f4f8;
+}
+
+td:first-child,
+th:first-child {
+    border-top-left-radius: 8px;
+}
+
+td:last-child,
+th:last-child {
+    border-top-right-radius: 8px;
 }
 
 /* Buttons */
@@ -47,20 +66,22 @@ button {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-right: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-right: 10px;
 }
 
 button:hover {
     background-color: #d95d45;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .edit-btn {
-    background-color: #2a9d8f;
+    background-color: #0679bf;
 }
 
 .edit-btn:hover {
-    background-color: #21867a;
+    background-color: #056a9d;
 }
 
 .delete-btn {
@@ -82,7 +103,8 @@ button:hover {
         display: block;
         width: 100%;
         text-align: right;
-        padding: 10px;
+        padding: 12px;
+        font-size: 0.9em;
     }
 
     td:before {
@@ -90,5 +112,12 @@ button:hover {
         float: left;
         font-weight: bold;
         text-transform: uppercase;
+    }
+
+    td:first-child,
+    th:first-child,
+    td:last-child,
+    th:last-child {
+        border-radius: 0;
     }
 }

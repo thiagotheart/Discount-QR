@@ -4,15 +4,42 @@ body {
     background: url('bg.png') no-repeat center center fixed;
     background-size: cover;
     color: #fff;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Apply 5px blur and 10% dark overlay to the background */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    /* 10% dark overlay */
+    backdrop-filter: blur(5px);
+    /* Apply blur effect */
+    z-index: 0;
+}
+
+/* Logo fixed at the top center */
 .logo-container {
-    text-align: center;
-    margin-top: 20px;
+    position: fixed;
+    top: 20px;
+    /* Adjust this value to change the distance from the top */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    /* Ensure the logo is above other elements */
 }
 
 .logo {
-    width: 150px;
+    width: 200px;
+    z-index: 1;
 }
 
 .container {
@@ -20,61 +47,77 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(3px);
-    /* Apply blur effect */
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
+    /* More opacity to distinguish from blurred background */
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    z-index: 1;
+    position: relative;
+    text-align: center;
 }
 
 h1 {
-    font-size: 2.5em;
+    font-size: 2.8em;
+    color: #fff;
+    letter-spacing: 1px;
     margin-bottom: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    z-index: 1;
 }
 
 p {
-    font-size: 1.2em;
+    font-size: 1.3em;
+    color: #ddd;
     margin: 10px 0;
+    line-height: 1.5;
+    z-index: 1;
 }
 
 .code-display {
     font-weight: bold;
-    font-size: 1.5em;
+    font-size: 1.8em;
+    color: #f8d347;
+    /* Highlighted code color */
     margin-top: 15px;
+    z-index: 1;
 }
 
 .pricing-button {
-    padding: 10px 20px;
+    padding: 12px 25px;
     background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 1.2em;
+    font-weight: bold;
     margin-top: 20px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1;
 }
 
 .pricing-button:hover {
     background-color: #218838;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* Responsive design adjustments */
 @media (max-width: 768px) {
     .logo {
         width: 120px;
     }
 
     h1 {
-        font-size: 2em;
+        font-size: 2.2em;
     }
 
     p {
-        font-size: 1em;
+        font-size: 1.1em;
     }
 
     .pricing-button {
-        font-size: 0.9em;
+        font-size: 1em;
     }
 }

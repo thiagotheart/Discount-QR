@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <td>${client.firstName}</td>
                         <td>${client.lastName}</td>
                         <td>${client.phone}</td>
+                        <td>${client.discountCode}</td> <!-- Display the discount code here -->
                         <td>
                             <button class="edit-btn" data-id="${client.id}">Edit</button>
                             <button class="delete-btn" data-id="${client.id}">Delete</button>
