@@ -167,6 +167,44 @@ button:hover {
     /* Darker shade on hover */
 }
 
+/* Social Links Styling */
+.social-links {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 10;
+}
+
+.social-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    /* Circle background color */
+    border-radius: 50%;
+    /* Make the background a circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Add a shadow for depth */
+    transition: background-color 0.3s;
+}
+
+.social-icon i {
+    font-size: 24px;
+    color: #0679bf;
+    /* Icon color */
+}
+
+.social-icon:hover {
+    background-color: #bbb;
+    /* Darker shade on hover */
+}
+
+
 /* Ensure background is not blurred in mobile view */
 @media (max-width: 768px) {
     body {
@@ -177,5 +215,10 @@ button:hover {
     .container {
         padding: 20px;
         /* Less padding for smaller screens */
+    }
+
+    .social-links {
+        gap: 10px;
+        /* Reduce gap between icons on smaller screens */
     }
 }
